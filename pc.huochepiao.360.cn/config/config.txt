@@ -1,0 +1,7 @@
+{
+  "ext_url": "http://download.chrome.360.cn/ext/piao_5.3.0.11.crx",
+  "tg_mobile_piao_autopop_version": 2,
+  "autoLogin": 1,
+  "autoLoginRec": 1,
+  "autoSubmitRec": 0
+}

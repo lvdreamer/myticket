@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="icon" href="/otn/resources/images/ots/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="/otn/resources/images/ots/favicon.ico" type="image/x-icon" />
+<link href="/otn/resources/merged/sidebar_css.css?cssVersion=1.8965" rel="stylesheet" />
+<script src="/otn/resources/merged/sidebar_js.js?scriptVersion=1.8983" type="text/javascript"></script>
+<script>
+
+/*<![CDATA[*/
+
+ var ctx='/otn/';
+ var global_lang = 'zh_CN';
+ var sessionInit = 'lovebobo14551';
+ var isMobileCheck = 'Y';
+ var isMember='N';
+ 
+ /*]]>*/
+</script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的12306 | 客运服务 | 铁路客户服务中心</title>
+<link href="/otn/resources/css/user.validation.css" rel="stylesheet" />
+<link href="/otn/resources/merged/bindMobile_css.css?cssVersion=1.8965" rel="stylesheet" />
+<script type="text/javascript" src="/otn/resources/merged/bindMobile_js.js?scriptVersion=1.8983" xml:space="preserve"></script>
+<script xml:space="preserve">
+/*<![CDATA[*/
+    var mobile = null;
+    var userreceive = null;
+    var info_show = 'Y';
+    var mo_msg = '';
+ /*]]>*/
+</script>
+</head>
+<body><!--header start-->
+<div class="header"><div class="header-bd"><a href="http://www.12306.cn/"><h1 class="logo">中国铁路客户服务中心-客运中心</h1>
+</a>
+<div class="login-info"><div class="phone-link"><a href="/otn/appDownload/init" target="true">手机版</a>
+</div>
+<div class="menu"><a href="/otn/index/initMy12306" class="menu-bd" id="js-my">我的12306<b></b>
+</a>
+<div class="menu-list"><b></b>
+<ul><li><a href="/otn/queryOrder/initNoComplete">未完成订单</a>
+</li>
+<li><a href="/otn/queryOrder/init">已完成订单(改/退)</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/insurance/init">我的保险</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/modifyUser/initQueryUserInfo">查看个人信息</a>
+</li>
+<li><a href="/otn/userSecurity/init">账户安全</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/passengers/init">常用联系人</a>
+</li>
+<li><a href="/otn/address/init">车票快递地址</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/icentre/qxyyInfo">重点旅客预约</a>
+</li>
+<li><a href="/otn/icentre/lostInfo">遗失物品查找</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/icentre/serviceQuery">服务查询</a>
+</li>
+<li class="line"></li>
+<li><a href="/otn/advice/complaintInfo">投诉</a>
+</li>
+<li><a href="/otn/advice/adviceInfo">建议</a>
+</li>
+</ul>
+</div>
+</div>
+<span class="login-txt" style="color: #666666;"><span>意见反馈:<a class="cursor colorA" href="mailto:12306yjfk@rails.com.cn">12306yjfk@rails.com.cn</a>
+          您好，</span>
+<a id="login_user" href="/otn/index/initMy12306" class="colorA" style="margin-left:-0.5px;"><span style="width:50px;">王海波</span>
+</a>
+| <a id="regist_out" href="/otn/login/loginOut">退出</a>
+</span>
+</div>
+<div class="nav"><ul><li><a href="/otn/index/init">客运首页</a>
+</li>
+<li id="selectYuding"><a href="/otn/leftTicket/init">车票预订</a>
+</li>
+<li><a href="/otn/lcxxcx/init">余票查询</a>
+</li>
+<li style="width: 71px;" id="js-xd" class="nav-guide"><a href="javascript:">出行向导</a>
+<div class="nav-list"><ul style="font-weight:normal"><li><a href="/otn/queryTrainInfo/init">车次查询</a>
+</li>
+<li><a href="/otn/leftTicketPrice/init">票价查询</a>
+</li>
+<li><a href="/otn/leftTicketPrice/initPublicPrice">公布票价查询</a>
+</li>
+<li><a href="/otn/czxx/init">车站车次查询</a>
+</li>
+<li><a href="/otn/zzzcx/init">中转查询</a>
+</li>
+<li><a href="/otn/zwdch/init">正晚点查询</a>
+</li>
+<li><a href="/otn/queryAgencySellTicket/init">代售点查询</a>
+</li>
+</ul>
+</div>
+</li>
+<li id="selectHelp"><a href="/otn/gonggao/help.html">信息服务</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!--header end-->
+<!--页面主体  开始-->
+<div class="content clearfix"><!--当前位置 开始-->
+<div class="crumbs">
+    	您现在的位置：<a href="/otn/index/init" shape="rect">客运首页</a>
+&nbsp;>&nbsp;<a href="/otn/index/initMy12306" shape="rect">我的12306</a>
+&nbsp;>&nbsp;<a href="/otn/modifyUser/initQueryUserInfo" shape="rect">个人信息</a>
+&nbsp;>&nbsp;<a href="/otn/userSecurity/init" shape="rect">账号安全</a>
+&nbsp;>&nbsp;
+    	<strong>手机核验</strong>
+</div>
+<!--当前位置 结束-->
+<!--左侧导航 开始-->
+<div class="sidebar"><div class="layout my"><div class="lay-hd">我的12306</div>
+<div class="lay-bd" id="js-my12306"><div class="nav-label"><span></span>
+</div>
+<dl id="sidebar_menu"><dt><a href="javascript:void(0);" id="link_4_myTicket">我的火车票</a>
+</dt>
+<dd id="dd_4_NonComOrder" url="queryOrder/initNoComplete"><a href="javascript:void(0);" id="link_4_NonComOrder">未完成订单</a>
+</dd>
+<dd id="dd_4_comOrder" url="queryOrder/init"><a href="javascript:void(0);" id="link_4_comOrder">已完成订单</a>
+</dd>
+<dt id="link_4_ticketInfo" url="insurance/init"><a href="javascript:void(0);">我的保险</a>
+</dt>
+<dt><a href="javascript:void(0);" id="link_4_myInfor">个人信息</a>
+</dt>
+<dd id="dd_4_showMyInfor" url="modifyUser/initQueryUserInfo"><a href="javascript:void(0);" id="link_4_showMyInfor">查看个人信息</a>
+</dd>
+<dd id="dd_4_showSafe" url="userSecurity/init"><a href="javascript:void(0);" id="link_4_showSafe">账号安全</a>
+</dd>
+<dd id="dd_4_sjhy" url="userSecurity/bindTel"><a href="javascript:void(0);" id="link_4_sjhy">手机核验</a>
+</dd>
+<dt><a href="javascript:void(0);" id="link_4_passengerInfor">常用信息管理</a>
+</dt>
+<dd id="dd_4_passengerIns" url="passengers/init"><a href="javascript:void(0);" id="link_4_passengerIns">常用联系人</a>
+</dd>
+<dd id="dd_4_address" url="address/init"><a href="javascript:void(0);" id="dd_4_address">车票快递地址</a>
+</dd>
+<dt><a href="javascript:void(0);">温馨服务</a>
+</dt>
+<dd id="dd_4_qxyy" url="icentre/qxyyInfo" class="last" otherUrl="icentre/qxyy"><a href="javascript:void(0);">重点旅客预约</a>
+</dd>
+<dd id="dd_4_lostitems" url="icentre/lostInfo" otherUrl="icentre/lostItems"><a href="javascript:void(0);">遗失物品查找</a>
+</dd>
+<dd id="dd_4_serviceQuery" url="icentre/serviceQuery"><a href="javascript:void(0);">服务查询</a>
+</dd>
+<dt><a href="javascript:void(0);">投诉和建议</a>
+</dt>
+<dd id="dd_4_complaint" url="advice/complaintInfo" otherUrl="advice/complaint"><a href="javascript:void(0);">投诉</a>
+</dd>
+<dd id="dd_4_advice" url="advice/adviceInfo" otherUrl="advice/advice"><a href="javascript:void(0);">建议</a>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<!--左侧导航 结束-->
+<!--右侧主体 开始-->
+<div class="main"><!--系统信息 开始-->
+<div class="layout order"><div class="lay-hd">账号安全</div>
+<form action="" id="_editMobileForm" method="get" enctype="application/x-www-form-urlencoded"><div class="lay-bd"><div class="safe"><h2>手机核验</h2>
+<ul class="safe-list"><li><div class="label"><span class="required">*</span>
+原手机号：</div>
+<div class="r-txt"><span id="old_mobile_no">13605155729</span>
+<a href="javascript:" id="has_hy_a" shape="rect">已通过核验</a>
+<a id="hy_a" style="cursor: pointer;margin-left: 5px;" shape="rect">手机核验</a>
+</div>
+</li>
+<li><div class="label"><span class="required">*</span>
+新手机号：</div>
+<div class="r-txt"><input name="mobile_no" id="mobile_no" type="text" class="inptxt w200 color333" />
+</div>
+</li>
+<li class="line"></li>
+<li><div class="label"><span class="required">*</span>
+登录密码：</div>
+<div class="r-txt"><input name="_loginPwd" id="_loginPwd" type="password" class="inptxt w200 color333" />
+</div>
+<div class="tips">正确输入密码才能修改密保</div>
+</li>
+</ul>
+<div class="lay-btn"><a href="javascript:$._cancelSubmit();" class="btn92" shape="rect">取消</a>
+<a href="javascript:$._editSubmit();" class="btn92s" shape="rect">确认</a>
+</div>
+</div>
+</div>
+</form>
+</div>
+<!--系统信息 结束-->
+<div class="tips-txt hide mt10"><h2>温馨提示：</h2>
+<P>在互联网购买学生票后，须携带购票时所使用的有效身份证件、附有“学生火车票优惠卡”的学生证（均为原件）和订单号码于列车开车前到安装有学生火车票优惠卡识别器的车站售票窗口或铁路客票代售点换取纸质车票后乘车。 </P>
+</div>
+</div>
+<!--右侧主体 结束-->
+</div>
+<!--页面主体  结束-->
+<!--页面底部  开始-->
+<div class="footer"><p><a href="http://www.12306.cn/mormhweb/gljd/gywm" target="true">关于我们</a>
+|<a href="http://www.12306.cn/mormhweb/gljd/wzls/" target="true">网站声明</a>
+</p>
+<p>版权所有©2008-2015铁道部信息技术中心&nbsp;&nbsp;中国铁道科学研究院</p>
+<p>京ICP备10009636号</p>
+</div>
+<!--页面底部  结束-->
+</body>
+</html>

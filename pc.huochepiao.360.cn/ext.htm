@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>360抢票五代</title>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta name="description" content="360抢票五代">
+    <meta name="keywords" content="360抢票五代 ，360抢票，抢票，火车票，刷票机，抢票助手">
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <!---->
+    <link rel="stylesheet" href="css/index.min.css?version=20161205141140" />
+    <script src="lib/sea.js"></script>
+    <script type="text/javascript">
+    var seUrl = 'http://down.360safe.com/se/2015qiangpzb.exe';
+    var minExtVer = '5.3.0.11';
+    var extUrl = 'http://download.chrome.360.cn/ext/piao_' + minExtVer + '.crx';
+    var isExtInstalled = false;
+    var is360 = false;
+    var isChrome = false;
+    var checked = false;
+    var extVer= '5.3.0.11';
+    var ipAble = false;
+    var qh_browser = '360';
+
+    qh_browser += navigator.userAgent;
+    is360 = qh_browser.match(/360/);
+    isChrome = qh_browser.match(/chrome/ig);
+
+    function updateExt() {
+      var ele = document.getElementById('ext_url');
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = xmlHttpChange;
+        xhr.open('GET', 'config/config.txt', false);
+        xhr.send(null);
+        function xmlHttpChange() {
+          if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+              try {
+                var responseText = xhr.responseText||'{}';
+                var responseObj = JSON.parse(responseText);
+                var url = responseObj.ext_url;
+                url && ele && ele.setAttribute('href',url);
+              }catch(e){}
+            }
+          }
+        }
+    }
+    function resultShow() {
+      document.getElementById('error_overlay').style.display = 'none';
+      document.getElementById('error_loading').style.display = 'none';
+
+      if (checked) {
+        return;
+      }
+      checked = true;
+
+      if (!isExtInstalled) {
+        if (extVer >= minExtVer) {
+          document.getElementById('main').style.display = 'block';
+          seajs.config({
+            base: './'
+          });
+          var index = './20161205141140/index';
+          
+          seajs.use(index);
+        } else {
+          document.getElementById('ext_msg').innerText = '您需要升级360抢票王扩展才能进行抢票';
+          document.getElementById('ext_url').innerText = '升级抢票王扩展';
+          document.getElementById('error_noext').style.display = 'block';
+          document.getElementById('error_overlay').style.display = 'block';
+          updateExt();
+          switch($_GET('src')) {
+            case 'desktop':
+            case 'desktop1':
+              $(document).trigger('show-nocrx-app-download-layer');
+              break;
+          }
+          new Image().src = 'http://dd.browser.360.cn/static/a/387.7176.gif?' +  Math.random();
+        }
+      } else if (is360 && isChrome) {
+        document.getElementById('error_noext').style.display = 'block';
+        document.getElementById('error_overlay').style.display = 'block';
+        updateExt();
+        switch($_GET('src')) {
+          case 'desktop':
+          case 'desktop1':
+            $(document).trigger('show-nocrx-app-download-layer');
+            break;
+        }
+        new Image().src = 'http://dd.browser.360.cn/static/a/387.7176.gif?' +  Math.random();
+      } else {
+        document.getElementById('error_not360').style.display = 'block';
+        document.getElementById('error_overlay').style.display = 'block';
+        new Image().src = 'http://dd.browser.360.cn/static/a/387.7176.gif?' +  Math.random();
+      }
+    }
+
+    function extInstalledListener(e) {
+      isExtInstalled = e.data.isExtInstalled;
+      extVer = e.data.version;
+      ipAble = e.data.ipAble;
+      if (isExtInstalled) {
+        resultShow();
+        window.removeEventListener('message', extInstalledListener);
+      }
+    }
+
+    function $_GET(key) {
+      var re = new RegExp("(?:\\?|&)" + key + "=(.*?)(?=&|$)", "i");
+      var matches = location.search.match(re);
+      return matches && matches[1];
+    }
+
+    switch($_GET('src')) {
+      case 'desktop':
+      case 'desktop1':
+        new Image().src = 'http://dd.browser.360.cn/static/a/387.5231.gif?' +  Math.random();
+        break;
+    }
+
+    window.onload = function () {
+      var timeout = 5000;
+      switch($_GET('src')) {
+        case 'hd':
+        case '2015qiangp':
+          timeout = 10000;
+          break;
+      }
+      setTimeout(function () {
+        if (!isExtInstalled) {
+          resultShow();
+          if (window.removeEventListener) {
+            window.removeEventListener('message', extInstalledListener);
+          }
+        }
+      }, timeout);
+    };
+
+    if(window.addEventListener){
+      window.addEventListener('message', extInstalledListener);
+    }
+    </script>
+</head>
+
+<body>
+  <div class="sell-time">
+    <p class="header">
+      <span>起售时间</span>
+    </p>
+    <ul class="list"></ul>
+  </div>
+
+  <div class="body-mask"></div>
+  <div class="qrcode-wrapper">
+      <input class="btn-close" type="button" name="" value="" />
+      <div class="qrcode">
+          <span class="notify-code"></span>
+      </div>
+
+      <div class="qrcode-title">将提醒发送到微信</div>
+      <div class="qrcode-title followed">已启用微信提醒</div>
+
+      <div class="qrcode-tips">按以下说明进行操作，抢到票后，360抢票王会通过微信提醒你付款</div>
+      <div class="qrcode-tips followed">抢到票后，360抢票王会通过微信提醒你付款，避免你错过付款时间！</div>
+
+      <div class="qrcode-code">
+          <div><i>1</i>微信扫码关注360浏览器</div>
+          <div><i>2</i>输入提醒码
+              <span class="notify-code"></span>并发送</div>
+      </div>
+      <div class="qrcode-code followed">
+          <span class="btn-close btn_known">我知道了</span>
+          <a class="btn-debook">停用微信提醒</a>
+      </div>
+
+      <div class="qrcode-people"></div>
+  </div>
+  <div class="tg-mobile-layer"><a class="close"></a><img src="images/tg_mobile_layer.gif"></div>
+  <div class="app-download-layer">
+    <a class="app-download-layer-close"></a>
+    <img class="qrcode" src="images/qrc_banner.png">
+    <div class="app-dl-layer-inputs">
+      <input type="text" name="app-dl-phone-num" maxlength="11" placeholder="请输入手机号码">
+      <input type="text" name="app-dl-captcha" maxlength="4" placeholder="验证码">
+      <img  class="app-dl-captcha-img"><a class="app-dl-captcha-refresh">看不清换一张</a>
+      <a class="app-dl-submit-btn">免费获取</a>
+      <div class="app-dl-layer-tips">
+        <div class="app-dl-phone-tip"><i></i><span></span></div>
+        <div class="app-dl-captcha-tip"><i></i><span></span></div>
+        <div class="app-dl-success-tip"><i></i>下载链接短信已成功发送到您的手机！</div>
+      </div>
+    </div>
+  </div>
+  <div class="app-nocrx-download-layer">
+    <img class="qrcode" src="images/qrc_nocrx.png">
+    <div class="app-dl-layer-inputs">
+      <input type="text" name="app-dl-phone-num" maxlength="11" placeholder="请输入手机号码">
+      <input type="text" name="app-dl-captcha" maxlength="4" placeholder="验证码">
+      <img  class="app-dl-captcha-img"><a class="app-dl-captcha-refresh">看不清换一张</a>
+      <a class="app-dl-submit-btn">免费获取</a>
+      <div class="app-dl-layer-tips">
+        <div class="app-dl-phone-tip"><i></i><span></span></div>
+        <div class="app-dl-captcha-tip"><i></i><span></span></div>
+        <div class="app-dl-success-tip"><i></i>下载链接短信已成功发送到您的手机！</div>
+      </div>
+    </div>
+    <a class="close">继续使用电脑抢票</a>
+  </div>
+  <div class="phone-alert">
+    <div class="phone-alert-mask"></div>
+    <div class="phone-alert-layer">
+      <h4>提示<a class="phone-alert-close"></a></h4>
+      <p><i></i><span></span></p>
+      <div class="phone-alert-buttons"><a class="phone-alert-btn-ok">确定</a></div>
+    </div>
+  </div>
+  <div class="app-notice app-notice-1">
+    <h3 class="sprite">紧急公告</h3>
+    <div class="intro">
+      <p class="sprite bold">扫码验证即可进入抢票高速通道</p>
+      <p>春运临近，12306抢票通道会发生拥挤，可能导致抢票成功率低<br>
+      快使用360手机浏览器扫码，进入360抢票专属通道</p>
+    </div>
+    <p class="verify-failed"><i class="sprite"></i>验证失败 请重新扫码进行验证</p>
+    <div class="app-verify-qrcode-border">
+      <div class="app-verify-qrcode"></div>
+    </div>
+    <p class="verify-360mse">请使用360手机浏览器扫码进入</p>
+    <p><a class="sprite verify-submit">我已验证</a><a class="verify-none">继续使用拥挤通道</a></p>
+  </div>
+  <div class="app-notice app-notice-2">
+    <p class="head">“ 哎呦 12306普通通道慢死了，<br>
+    我还是快进入360高速通道抢票吧 ”</p>
+    <div class="intro">
+      <p class="sprite bold">扫码验证即可进入抢票高速通道</p>
+    </div>
+    <p class="verify-failed"><i class="sprite"></i>验证失败 请重新扫码进行验证</p>
+    <div class="app-verify-qrcode-border">
+      <div class="app-verify-qrcode"></div>
+    </div>
+    <p class="verify-360mse">请使用360手机浏览器扫码验证</p>
+    <p><a class="sprite verify-submit">我已验证</a><a class="verify-none">继续使用拥挤通道</a></p>
+  </div>
+  <div class="app-notice check-vip-layer">
+    <div class="intro">
+      <p>为防止恶意刷票，保证VIP线路稳定<br>
+      请使用360手机浏览器，扫描二维码核验</p>
+    </div>
+    <div class="app-verify-qrcode-border">
+      <div class="app-verify-qrcode"></div>
+    </div>
+    <p>提示: 使用扫码工具扫码可下载360手机浏览器</p>
+    <p class="verify-failed"><i class="sprite"></i>验证失败 请重新扫码进行验证</p>
+    <p><a class="sprite verify-submit">我已验证</a><a class="verify-none">继续使用拥挤通道</a></p>
+  </div>
+  <div class="uncheck-tel-layer">
+    <a class="close"></a>
+    <p class="txt">为了保护您的信息安全，并确保购票信息能够准确送达给您，12306网站需要对您的12306账号手机号码进行双向核验。请您在12月03日前进行核验，12月03日起未核验的用户可能会不能购票。请您尽快核验手机号，以免耽误回家行程！</p>
+    <p class="notice">双向核验后的手机号码可以直接登录哦</p>
+    <p><a class="btn" href="https://kyfw.12306.cn/otn/userSecurity/bindTel" target="_blank">立即核验</a></p>
+  </div>
+
+  <div id="main">
+      <!-- 注册区域 -->
+      <div id="login_wrapper_outer" style="display:none;">
+          <div id="login_highlight_bg"></div>
+          <div id="login_wrapper">
+              <a id="login_logo">
+              </a>
+              <form id="login_form" method="post" enctype="application/x-www-form-urlencoded">
+                  <ul>
+                      <li>
+                          <div style="width:190px;">
+                              <p>
+                                  <input name="user_name" type="text" placeholder="请输入12306账号...">
+                              </p>
+                              <p><a href="https://kyfw.12306.cn/otn/regist/init" target="_blank" tabindex="-1">注册12306账号</a>
+                              </p>
+                          </div>
+                      </li>
+                      <li>
+                          <div style="width:160px;">
+                              <p>
+                                  <input name="user_password" type="password" placeholder="请输入密码...">
+                              </p>
+                              <p><a href="https://kyfw.12306.cn/otn/forgetPassword/initforgetMyPassword" target="_blank" tabindex="-1">忘记密码?</a>
+                              </p>
+                          </div>
+                      </li>
+                      <li>
+                          <div style="width:142px;">
+                            <p class="randcode-start" style="line-height:40px;color:#fff;cursor:pointer;"></p>
+                            <p style="display:none;">
+                                  <input name="user_randcode" type="text" placeholder="请输入验证码...">
+                              </p>
+                              <!--<p>
+                                  <a></a>
+                              </p>-->
+                          </div>
+                      </li>
+                      <li class="randcode-select" style="position:absolute;margin-left:208px;margin-top:38px;display:none; -webkit-user-select:none;">
+                          <div class="randcode_wrapper" style="position:relative;border:1px solid #6ebe45;border-radius:3px;background:#fff;-webkit-user-select: none;">
+                              <p class="img-wrapper" style="height:192px;position:relative;padding:4px 4px 0 4px;">
+                                  <img src="/images/captcha_loading.gif" style="width:293px;height:190px;margin-top:1px;">
+                              </p>
+                              <p><a class="change_randcode" style="position:absolute;top:10px;right:1px;"></a></p>
+                              <div class="auto-rec">
+                                <div class="gif"></div>
+                                <div class="txt">
+                                  <p>正在自动识别验证码...</p>
+                                  <p><a class="stop-auto-rec">我要手动输入</a></p>
+                                </div>
+                              </div>
+                          </div>
+                      </li>
+                      <li>
+                          <div>
+                              <p>
+                                  <input class="submit" name="user_submit" type="submit" value="" tabindex="5">
+                              </p>
+                          </div>
+                      </li>
+                  </ul>
+              </form>
+              <div class="error_tips error_tips_normal"></div>
+              <div class="error_tips error_tips_randcode"></div>
+          </div>
+      </div>
+      <!-- 顶部导航区域 -->
+      <div id="header_wrapper_outer">
+          <div id="header_wrapper">
+              <a id="header_logo"></a>
+              <ul>
+                  <li class="active">
+                      <a href="#">首页</a>
+                  </li>
+                  <li>
+                      <a href="https://kyfw.12306.cn/otn/queryOrder/initNoComplete" target="_blank" rel="noreferrer">我的订单</a>
+                  </li>
+                  <li>
+                      <!-- <a href="https://kyfw.12306.cn/otn/leftTicket/init" target="_blank" rel="noreferrer">12306网站</a> -->
+                      <a href="http://12306.360.cn?from=qiangpiaosandai" target="_blank">领取春运福利</a>
+                  </li>
+                  <li>
+                      <a href="http://www.12306.cn/mormhweb/zxdt/201411/t20141126_2316.html" target="_blank" rel="noreferrer" style="color: yellow;">售票时间</a>
+                  </li>
+                            <!--  <li>
+                  <a href="http://bbs.360safe.com/thread-3086169-1-1.html" target="_blank">抢票帮助</a>
+                </li>
+                <li>
+                  <a href="http://down.360safe.com/360mse_20001108.apk" class="icon-phone" target="_blank">手机抢票</a>
+                </li>-->
+              </ul>
+          </div>
+      </div>
+
+      <div class="wrapper">
+        <!-- app banner -->
+        <div class="banner-app">
+          <a class="banner-app-button"></a>
+        </div>
+        <!-- 抢票日期提醒 -->
+        <div class="date-notice">
+          <!-- <span>今天可以抢<span class="date-from"></span> - <span class="date-to"></span>的票。</span> -->
+          <span><a href="http://tech.china.com/article/20161031/201610312120.html" target="_blank">12月30日起火车票预售期调整，请注意最新抢票时间。</a></span>
+          <a class="link-12306-bind-mobile" href="https://kyfw.12306.cn/otn/userSecurity/bindTel" target="_blank">请尽快对12306账号手机号码进行核验</a>
+        </div>
+        <!--主要的操作区域-->
+        <div class="query">
+          <!--出发地、目的地-->
+          <div class="trip-place">
+            <ul>
+              <li>
+                <span class="trip-label">出发城市</span>
+                <div class="trip-input">
+                  <input id="station_from" class="station-hide" type="text"/>
+                  <input id="station_from_text" class="station-text" type="text"/>
+                  <input id="station_from_icon" class="station-icon" type="button" tabindex="-1"/>
+                </div>
+              </li>
+              <li id="station_change" title="调换出发城市和到达城市"></li>
+              <li>
+                <span class="trip-label">到达城市</span>
+                <div class="trip-input">
+                  <input id="station_to" class="station-hide" type="text"/>
+                  <input id="station_to_text" class="station-text" type="text"/>
+                  <input id="station_to_icon" class="station-icon" type="button" tabindex="-1"/>
+                </div>
+              </li>
+              <li>
+                <span class="trip-label">出发日期</span>
+                <div class="trip-input">
+                  <input id="date-forward" class="station-hide" type="text"/>
+                  <input id="date_forward_text" class="station-text" type="text"/>
+                  <input id="date_forward_icon" class="station-icon" type="button"/>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!--查询-->
+          <div class="trip-query">
+            <ul>
+              <li>
+                <input type="checkbox" name="identity" class="switch-button" id="crh_filter">
+                <label for="crh_filter">仅高铁动车</label>
+              </li>
+              <li>
+                <input type="checkbox" name="identity" class="switch-button passenger-identity" id="student_identity" value="0X00"/>
+                <label for="student_identity">学生票</label>
+              </li>
+            </ul>
+
+            <div class="refresh">
+              <input id="btn_refresh" type="button" value="开始刷票"/>
+            </div>
+          </div>
+        </div>
+        <!-- <input id="btn_more_unfold" type="button" value="展开更多选项"/> -->
+        <span id="btn_more_unfold" class="more">展开更多选项<i></i></span>
+        <!--更多选项区域-->
+        <div class="filter">
+          <div class="f-bd">
+            <dl>
+              <dd>
+                <button class="select-btn btn-passenger">选择乘客</button>
+                <div id="passenger_container" class="selected-container"></div>
+                <input class="add-children-btn" type="button" value=""/>
+              </dd>
+              <div id="passenger_panel" class="panel-container"></div>
+            </dl>
+
+            <dl>
+              <dd>
+                <button class="select-btn btn-seats">优先席别</button>
+                <div id="priorityseats" class="selected-container"></div>
+              </dd>
+              <div id="seats_panel" class="panel-container"></div>
+            </dl>
+
+            <dl>
+              <dd>
+                <button class="select-btn btn-trains">优先车次</button>
+                <div id="prioritytrains" class="selected-container"></div>
+              </dd>
+              <div id="trains_panel" class="panel-container"></div>
+            </dl>
+
+            <dl class="btn-more-advance">
+              <dd>
+                <button class="select-btn" id="btn_advance">高级选项</button>
+              </dd>
+            </dl>
+            <dl class="more-advance">
+              <dd>
+                <button class="select-btn btn-dates">备选日期</button>
+                <div id="dates_container" class="selected-container"></div>
+              </dd>
+              <div id="dates_panel" class="panel-container"></div>
+            </dl>
+            <dl class="more-advance">
+              <dd>
+                <label style="margin-left:12px;">高级设置</label>
+                <label><input type="checkbox" id="select_seat_type">尝试购买下铺</label>
+                <label for="chk_auto_submit_switcher"><input type="checkbox" id="chk_auto_submit_switcher"><span id="auto_submit_label"></span></label>
+                <label>
+                  <select name="select_priority" id="select_priority" class="select-priority">
+                   <option value="车次优先" selected="selected">车次优先</option>
+                   <option value="席别优先">席别优先</option>
+                 </select>
+                </label>
+                <!-- <label style="margin-left: 18px;">
+                  <select name="select_priority" id="select_seat_type" class="select-priority">
+                   <option value="尝试下铺" selected="selected">尝试下铺</option>
+                   <option value="尝试中铺">尝试中铺</option>
+                   <option value="尝试上铺">尝试上铺</option>
+                 </select>
+                </label> -->
+                <label style="margin-left:17px">
+                  <button class="drop-button btn-switch-route">选择线路(当前<span>线路1</span>)</button>
+                  <menu class="brush-route">
+                    <li>线路1 刷票人数：<span class="channel1"></span></li>
+                    <li>线路2 刷票人数：<span class="channel2"></span></li>
+                    <li>VIP线路 刷票人数：<span class="channel_vip"></span></li>
+                  </menu>
+                </label>
+                <label style="margin-left:16px;display:none;" class="weixin-notify-wrapper">抢票成功后，通过微信提醒我
+                    <a class="btn-weixin-notify" href="javascript:void(0)" style="margin-left:6px;color:#0e66c8;text-decoration:none;">马上设置</a>
+                </label>
+              </dd>
+            </dl>
+            <span class="more">收起更多选项<i></i></span>
+          </div>
+        </div>
+
+        <div id="date_tab"></div>
+        <!--车次列表-->
+        <div id="trainlist"></div>
+      </div>
+
+      <!--公告模块-->
+      <div class="notice-wrapper">
+        <button class="notice-icon"></button>
+        <div class="notice-content">
+          <div class="notice-arrow"></div>
+          <p id="notice_msg"></p>
+          <a href="#">我知道了</a>
+        </div>
+      </div>
+
+      <div id="footer">
+        <p>Copyright©2005-2016 360.CN All Rights Reserved 360互联网安全中心<br/>隐私权政策  京ICP证080047号</p>
+      </div>
+
+      <!--刷票状态-->
+      <div class="refresh-status-container">
+        <div class="refresh-status-mask"></div>
+        <div class="refresh-status">
+          <p class="msg-refresh-status">您关注的座席和车次没有余票，<span id="brush_countdown"></span>秒后为您尝试第&nbsp;<span id="refresh_count">1</span>&nbsp;次刷票！</p>
+          <p class="tg-mobile-piao">刷不到票？快试试手机浏览器抢票专版，双管齐下，提高<span>100%抢票成功率！</span><a>点我就有票</a></p>
+          <div class="anim-refresh-status"></div>
+          <div class="refresh-tips" id="refresh_tips">
+            <a href="http://12306.360.cn/?src=pc_web" target="_blank" class="refresh-anchor"></a>
+            <p>亲，我会一直帮您刷着票的，为了让您回家不难，</p>
+            <p>去试试360为您准备的<a href="http://12306.360.cn/" target="_blank">其他回家方式（免费）</a>吧！</p>
+          </div>
+          <div class="refresh-tips" id="buyend_tips">
+            <p>购票小贴士：您选择的<strong id="buyend_train"></strong>列车总是缺票么？</p>
+            <p>您可以查询始发站到终点站（<strong id="buyend_start"></strong>到<strong id="buyend_end"></strong>）碰碰运气</p>
+          </div>
+        </div>
+        <div class="refresh-transit">
+          <div class="transit-content">
+            <p class="title">帮你找到<span class="transit-count hl"> 12 </span>条线路能到<span class="hl station-from"> 上海 </span>，且有余票！</p>
+            <p class="tips">建议前往查看<span class="btn-look">查看详情</span></p>
+
+            <div class="ticket-status">
+              <!-- <p class="ticket-name">二等座（有票）</p>
+              <p class="ticket-price">¥91</p>
+              <div class="ticket-mask"></div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="transit-container">
+    <div class="header">
+      <p class="title">360抢票王 - 出行路线规划</p>
+      <input type="button" class="btn-close">
+    </div>
+
+    <div class="content">
+      <div class="view loading-view"><p class="title"></p><p class="loading"></p><p class="msg-tips">正在拼命规划路线...</p></div>
+      <div class="view empty-view"><p class="title"></p><p class="pic"></p><p class="msg-tips">很抱歉你来晚一步了，现在没有余票</p></div>
+      <div class="view data-view">
+        <p class="title"></p>
+        <div class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right-floating">
+    <a class="rf-close"></a>
+    <div class="rf-qrcode-bg">
+      <img src="images/qrc_youce.png">
+    </div>
+    <p>
+      扫码安装抢票专版<br>
+      双管齐下<br>
+      抢票成功率<br>
+      提升<span>100%</span>
+    </p>
+  </div>
+
+  <div class="bottom-floating-control">
+    <div class="bottom-floating-control-button"></div>
+  </div>
+  <div class="bottom-floating-layer">
+    <div class="bottom-floating-content">
+      <div class="bottom-floating-img"></div>
+      <div class="bottom-floating-app-download">
+        <div class="bottom-floating-form">
+          <h4>下载360手机浏览器抢票专版</h4>
+          <p>下载地址到手机</p>
+          <div class="bottom-floating-inputs">
+            <input type="text" name="bf-phone-num" placeholder="请输入手机号码">
+            <div class="bottom-floating-submit">
+              <input type="text" name="bf-captcha" placeholder="验证码">
+              <img  id="bf-captcha-img" src="http://pc.huochepiao.360.cn/images/btn_login2.png">
+              <a class="bf-submit-btn">免费获取</a>
+            </div>
+            <div class="bottom-floating-tips">
+              <div class="bf-phone-tip"><i></i><span></span></div>
+              <div class="bf-captcha-tip"><i></i><span></span></div>
+              <div class="bf-success-tip"><i></i>下载链接短信已成功发送到您的手机！</div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-floating-qrcode">
+          <p>扫描二维码下载</p>
+          <div class="bottom-floating-qrcode-bg">
+            <img src="https://ss0.baidu.com/6ONWsjip0QIZ8tyhnq/it/u=2868037146,1713855063&fm=58">
+          </div>
+        </div>
+      </div>
+      <a class="bottom-floating-close"></a>
+    </div>
+  </div>
+
+<script type="javascript/arttemplate" id="transit_header_tpl">
+  <% if(list){ %>
+      发现
+      <span class="hl"><%=list.length%></span>
+      条能到
+      <span class="hl"><%=to%></span>
+      且有余票的路线，请考虑是否选用。
+  <% } %>
+</script>
+<script type="javascript/arttemplate" id="transit_content_tpl">
+  <div class="ch-content-outer"><div>
+  <div class="ch-content">
+      <div class="classify">
+        <div class="header">
+          <span class="dot"></span>
+          <% if(type == 'cross'){ %>
+          <span class="title">跨站购票</span>
+          <span class="title sub"> 省时省力，但车票较贵</span>
+          <span class="help">
+            <a class="icon-helper cross" title="查看帮助" target="_blank" href="http://bbs.360safe.com/thread-5093826-1-1.html">
+            </a>
+
+            <div class="tooltip">
+              <span class="arrow"></span>
+              <span class="btn-close-tips"></span>
+              <div class="content">
+                什么是跨站购票？<br/>你想从 A 到 B，结果发现没票了，那么你可以多花钱买从 A 到 C 且途经 B 的票，到 B 后直接下车，这就是所谓的跨站购票。
+              </div>
+            </div>
+          </span>
+          <% } else { %>
+          <span class="title">上车补票</span>
+          <span class="title sub"> 经济实惠，后面的站可能无座，得站着</span>
+          <span class="help">
+            <a class="icon-helper cross" title="查看帮助" target="_blank" href="http://bbs.360safe.com/thread-5093830-1-1.html">
+            </a>
+            <div class="tooltip">
+              <span class="arrow"></span>
+              <span class="btn-close-tips"></span>
+              <div class="content">
+                什么是上车补票？<br/>你想从 A 到 C，结果发现没票了，那么你可以多花钱买从 A 到 B 且途经 C 的票，到 B 后找乘务员补票，然后再车上一直待到 C 站再下车，这就是所谓的上车补票。
+              </div>
+            </div>
+          </span>
+          <% } %>
+        </div>
+
+        <div class="items">
+          <% for(var i = 0; i < list.length; i++){ %>
+            <% if(list[i].isFirst){ %>
+            <div class="item fold">
+            <% } else { %>
+            <div class="item">
+            <% } %>
+
+              <div class="basic">
+                <span class="train-no"><%=list[i].number%></span>
+                <span class="train-time"><%=list[i].startTime%>－<%=list[i].endTime%></span>
+                <span class="train-station"><%=list[i].from%>－<%=list[i].to%></span>
+
+                <% if(type == 'cross'){ %>
+                  <span>抵达<span class="hl"><%=list[i].sTo%></span>时下车</span>
+                <% } else { %>
+                    <span>到<span class="hl"><%=list[i].to%></span>后在车上补票，抵达<span class="hl"><%=list[i].sTo%></span>再下车</span>
+                <% } %>
+
+                <% if(list[i].percent){ %>
+                  <span class="tips">大约比原价贵：<span class="hl"><%=list[i].percent%></span></span>
+                <% } %>
+
+                <span class="btn-arrow"></span>
+              </div>
+
+              <div class="detail">
+                <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr data-trainlist-row="<%=list[i].number%>" class="trains">
+                <td class="trainlist_column train_num"><span class="icon-arrow"></span></td>
+                <td class="trainlist_column train_detail train_seats">
+                <div class="seats_info">
+                <ul>
+
+                <% for(var j = 0; j < list[i].seats.length; j++){ %>
+                  <% var seat = list[i].seats[j]; %>
+
+                  <% if(seat.display != 'none') { %>
+                  <li>
+                    <a class="seattickets highlight" data-trainlist-seattype="<%=seat.name%>" data-trainlist-seatcode="<%=seat.code%>" href="javascript:void(0);"><%=seat.name%><span class="detail">（<%=seat.tickets%><%=seat.suffix%>）</span>
+                      <% if(seat.price){ %>
+                        <!--<br><em>￥<%=seat.price%></em>-->
+                      <% } %>
+                    </a></li>
+                  <% } %>
+                <% } %>
+
+                </ul>
+                </div>
+                </td>
+                </tr>
+                </table>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div></div>
+</script>
+
+<div class="error_not360" id="error_not360">
+  <div data-window-elem="content" class="content">
+    您需要安装360安全浏览器抢票专版才能进行抢票
+  </div>
+  <a href="javascript:void(0);" class="btn_apply" id="se_url" target="_blank">下载抢票专版</a>
+  <script type="text/javascript">
+  document.getElementById('se_url').setAttribute('href',seUrl);
+  </script>
+</div>
+
+<div class="error_not360" id="error_noext">
+  <div id="ext_msg" data-window-elem="content" class="content">
+    您需要添加360抢票王扩展才能进行抢票
+  </div>
+  <a href="javascript:void(0);" class="btn_apply" id="ext_url" target="_blank">添加抢票王扩展</a>
+  <script type="text/javascript">
+    var ele = document.getElementById('ext_url');
+    ele && ele.setAttribute('href',extUrl);
+  </script>
+</div>
+
+<div id="error_overlay" style="filter:alpha(opacity=70);opacity: 0.7; background-color: black; position:
+ fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; z-index: 2000; "><iframe style="filter:alpha(opacity=0);opacity: 0;width:100%;height:100%"></iframe></div>
+
+<div class="error_loading" id="error_loading"><img src="images/loading.gif"><div>
+
+<script type="text/javascript">
+  var overlay = document.getElementById('error_overlay');
+  overlay.style.width = screen.width + 'px';
+  overlay.style.height = screen.height + 'px';
+</script>
+
+
+<!--通用选择面板模板-->
+<script type="javascript/template" id="check_panel_tpl">
+  <div class="check-panel">
+    <div class="cd-header">
+      <span class="cd-title">{{=info.title}}</span>
+      <input class="ch-btn-close" type="button"/>
+    </div>
+
+    <div class="ch-content-outer"><div>
+    <div class="ch-content">
+      {{info.empty}}
+        <div class="ch-empty">
+          <img class="ch-empty-img" src="images/loading.gif" alt=""/>
+        </div>
+      {{:info.empty}}
+        <!--{{info.error}}
+          <div class="ch-error"></div>
+        {{:info.error}}-->
+          {{@info.items}}
+           <div class="ch-item">
+             <input type="checkbox" id="{{%_val.id}}" {{%_val.checked}} value="{{=_val.value}}"/>
+             <label for="{{%_val.id}}">{{%_val.text}}</label>
+           </div>
+          {{/@info.items}}
+        <!--{{/info.error}}-->
+      {{/info.empty}}
+    </div></div>
+    </div>
+  </div>
+</script>
+
+  <!--选择乘客面板模板-->
+  <script type="javascript/template" id="check_passenger_panel_tpl">
+    <div class="check-panel">
+      <div class="cd-header">
+        <a id="btn_add_passenger" href="https://kyfw.12306.cn/otn/passengers/addInit" target="_blank"><span
+          class="cd-title">{{=info.title}}</span></a>
+        {{info.student}}
+        <span class="cd-tips">当前选择了刷学生票，乘车人只能是学生</span>
+        {{:info.student}}
+        <span class="cd-tips-cbx">
+          <input type="checkbox" value="" id="cbx_student_to_adult" {{=info.studentToAdult}}>
+          <label for="cbx_student_to_adult">学生也是购买成人票</label>
+        </span>
+        {{/info.student}}
+        <input id="btn_refresh_passenger" type="button" title="刷新乘客"/>
+      </div>
+
+      <div class="ch-content-outer"><div>
+      <div class="ch-content">
+        {{info.error}}
+          <div class="ch-error">获取乘客失败，请点击刷新按钮重试</div>
+        {{:info.error}}
+
+        {{info.empty}}
+          <div class="ch-empty">
+            <img class="ch-empty-img" src="images/loading.gif" alt=""/>
+          </div>
+        {{:info.empty}}
+         {{@info.items}}
+          <div class="ch-item ch-item-passenger">
+            <input type="checkbox" id="{{%_val.id}}" {{%_val.disabled}} {{%_val.checked}} value="{{=_val.value}}"/>
+            <label for="{{%_val.id}}">{{%_val.text}}</label>
+          </div>
+         {{/@info.items}}
+        {{/info.empty}}
+
+        {{/info.error}}
+      </div></div>
+      </div>
+    </div>
+  </script>
+
+<!--选择乘客模板-->
+<script type="text/template" id="select_passenger_template">
+  <div class="ch-content">
+    {{@info.items}}
+    <div class="ch-item ch-item-passenger">
+      <input type="checkbox" id="{{%_val.id}}" {{%_val.disabled}} {{%_val.checked}} value="{{=_val.value}}"/>
+      <label for="{{%_val.id}}">{{%_val.text}}</label>
+    </div>
+    {{/@info.items}}
+  </div>
+</script>
+
+  <!--选择席别面板模板-->
+  <script type="javascript/template" id="check_seats_panel_tpl">
+    <div class="check-panel">
+      <div class="ch-content ch-content-seats">
+            {{@info.items}}
+             <div class="ch-item ch-item-seats">
+               <input type="checkbox" id="{{%_val.id}}" {{%_val.disabled}} {{%_val.checked}} value="{{=_val.value}}"/>
+               <label for="{{%_val.id}}">{{%_val.text}}</label>
+             </div>
+            {{/@info.items}}
+      </div>
+    </div>
+  </script>
+<!--选择车次面板模板-->
+    <script type="javascript/arttemplate" id="check_trains_panel_tpl">
+      <div class="check-panel">
+        <div class="header">
+          <span class="number"><span class="btn-trains-sort <%=info.valueAscending%>" type="value">车次</span></span>
+          <span class="stationtime">
+            <span class="btn-trains-sort <%=info.startTimeAscending%>" type="startTime">发车－到站时间</span>
+          </span>
+          <span class="runtime">
+            <span class="btn-trains-sort <%=info.wholetimeAscending%>" type="wholetime">运行时间</span>
+          </span>
+        </div>
+  	  <div class="ch-content-outer"><div>
+        <div class="ch-content ch-content-trains">
+          <ul class="trains_list">
+          <% var items = info.items; %>
+          <% for(var i = 0; i < items.length; i++){ %>
+            <!-- 没有data的数据，是用户保存的优先车次在当前查询结果不存在，因此只有车次信息，没有其他数据 -->
+            <% if(!items[i].data || items[i].data.stopTicket) {continue;} %>
+            <li class="ch-item ch-item-trains">
+              <input type="checkbox" id="<%=items[i].id%>" <%=items[i].disabled%> <%=items[i].checked%> value="<%=items[i].value%>"/>
+              <label for="<%=items[i].id%>">
+                <span class="check-trains-number">
+                  <%=items[i].value%>
+                </span>
+                <span class="check-trains-time">
+                  <%=items[i].data.startTime%> - <%=items[i].data.endTime%>
+                </span>
+                <span class="check-trains-wholetime">
+                  <% var timeArr = items[i].data.wholetime.split(':') %>
+                  <% if((timeArr[0]) !== '00'){ %>
+                  <%=timeArr[0]%>小时
+                  <% } %>
+                  <%=timeArr[1]%>分
+                </span>
+              </label>
+            </li>
+          <% } %>
+          </ul>
+        </div>
+  	  </div></div>
+      </div>
+    </script>
+<!--通用选择结果面板模板-->
+<script type="javascript/template" id="panel_selected_tpl">
+  {{info.empty}}
+    <span class="panel-selected-empty {{=highlight}}">{{=emptyMsg}}</span>
+  {{:info.empty}}
+  {{@info.items}}
+    <div class="panel-selected-item" name="{{%_val.id}}" style="display: {{%_val.display}};">
+      <span class="select-item">{{%_val.text}}<del>X</del></span>
+    </div>
+  {{/@info.items}}
+
+  {{info.children}}
+    {{@info.children}}
+    <div class="panel-selected-item" name="{{%_val.id}}" style="display: {{%_val.display}};">
+      <span class="select-item">{{%_val.passenger_name}}（儿童）<del>X</del></span>
+    </div>
+    {{/@info.children}}
+  {{:info.children}}
+  {{/info.children}}
+
+  {{/info.empty}}
+</script>
+  <!--车次列表-->
+  <script type="javascript/arttemplate" id="train_list_template">
+    <div id="train_list_error_msg" class="train_list_error">
+    <span></span>
+    </div>
+    <% if(list){ %>
+      <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <% for(var i = 0; i < list.length; i++){ %>
+        <tr data-trainlist-row="<%=list[i].number%>" class="trains">
+          <td class="trainlist_column train_num"><%=list[i].number%></td>
+          <td class="trainlist_column train_detail train_time">
+            <div class="train_info">
+              <p class="traintime"><% if(!list[i].stopTicket){ %><%=list[i].startTime%>-<%=list[i].endTime%><% } %></p>
+              <p class="traindetail">
+              <% var arrWholeTime = list[i].wholetime.split(':'); %>
+              <%=list[i].from%>-<%=list[i].to%>
+              <% if(!list[i].stopTicket){ %>
+                历时<% if(arrWholeTime[0] !== '00'){ %><%=arrWholeTime[0] + ('小时')%><% } %><%=arrWholeTime[1] + ('分')%>
+              <% } %>
+              </p>
+            </div>
+          </td>
+          <td class="trainlist_column train_detail train_seats">
+            <div class="seats_info">
+            <ul>
+              <% var seatCount = 0,notSale = 0; %>
+              <% for(var j = 0; j < list[i].seats.length; j++){ %>
+              <% var seat = list[i].seats[j]; %>
+              <% if(seat.display !== 'none') { seatCount++; } %>
+              <% if(seat.tickets === '*') { notSale++;seat.display = 'none'; } %>
+              <li style="display:<%=seat.display%>">
+              <a class="seattickets" data-trainlist-seattype="<%=seat.name%>" data-trainlist-seatcode="<%=seat.code%>"
+              href="javascript:void(0);">
+                <span class="seats_name"><%=seat.name%></span>
+                <span class="detail">（<%=seat.tickets%><%=seat.suffix%>）</span>
+                <% if(seat.price){ %>
+                  <!--<br><em>￥<%=seat.price%></em>-->
+                <% } %>
+              </a></li>
+              <% } %>
+              <% if (list[i].stopTicket) { %>
+                <li class="noseats"><%=list[i].saleString%></li>
+              <% } else { %>
+                <% if(seatCount === 0){ %>
+                  <li class="noseats">本车次的票已经卖完了</li>
+                <% } %>
+                <% if(seatCount > 0 && seatCount === notSale){ %>
+                  <li class="noseats"><%=list[i].saleString%></li>
+                <% } %>
+              <% } %>
+            </ul>
+            </div>
+          </td>
+        </tr>
+        <% } %>
+      </table>
+    <% } %>
+  </script>
+  <!-- 订单确认浮层loading界面 -->
+  <script type="javascript/arttemplate" id="confirm_ordering_template">
+  <div class="confirm_layer">
+    <a class="btn_close" data-confirm-btn="close" href="javascript:void(0)"></a>
+    <h1 id="confirm_title">正在提交订单</h1>
+    <div class="train_info">
+      <div class="from_info">
+      <p class="city"><%=train.from%></p>
+      <p class="time"><%=train.startTime%></p>
+      <p class="date"><%=train.userSelectedDate%></p>
+      </div>
+      <div class="to_info">
+        <p class="city"><%=train.to%></p>
+        <p class="time"><%=train.endTime%></p>
+        <p class="date"><%=train.arriveDate%></p>
+      </div>
+      <div class="time_info">
+        <p class="train_num"><span class="num"><%=train.number%></span>（<%=seatName%>）</p>
+        <p class="whole_time">
+        <% var arrWholeTime = train.wholetime.split(':'); %>
+        历时<% if(arrWholeTime[0] !== '00'){ %><%=arrWholeTime[0] + ('小时')%><% } %><%=arrWholeTime[1] + ('分')%>
+        </p>
+      </div>
+    </div>
+    <div class="tickets_ordering" data-confirm-area="ordering">
+      <img src="images/loading.gif" width="40" height="40">
+      <span class="ordering_text">正在为您提交订单</span>
+    </div>
+  </div>
+  </script>
+<!-- 订单确认浮层 -->
+  <script type="javascript/arttemplate" id="submit_confirm_template">
+  <div class="confirm_layer">
+    <a class="btn_close" data-confirm-btn="close" href="javascript:void(0)"></a>
+    <h1 id="confirm_title">输入验证码，提交订单</h1>
+    <div class="train_info">
+      <div class="from_info">
+      <p class="city"><%=train.from%></p>
+      <p class="time"><%=train.startTime%></p>
+      <p class="date"><%=train.userSelectedDate%></p>
+      </div>
+      <div class="to_info">
+        <p class="city"><%=train.to%></p>
+        <p class="time"><%=train.endTime%></p>
+        <p class="date"><%=train.arriveDate%></p>
+      </div>
+      <div class="time_info">
+        <p class="train_num"><span class="num"><%=train.number%></span>（<%=seatName%>）</p>
+        <p class="whole_time">
+        <% var arrWholeTime = train.wholetime.split(':'); %>
+        历时<% if(arrWholeTime[0] !== '00'){ %><%=arrWholeTime[0] + ('小时')%><% } %><%=arrWholeTime[1] + ('分')%>
+        </p>
+      </div>
+    </div>
+    <div data-confirm-area="randcode">
+      <div class="passengers">
+          乘客：<%==passengers%>
+        <div class="total_price">总额：<span class="total_price_num" data-passenger-detail="totalprice"><%=totalPrice%></span></div>
+        <a class="detail" id="btn_passengers_detail" href="javascript:void(0)">详情<span class="dropdown"></span></a>
+      </div>
+      <div class="passengers_detail" id="passengers_detail">
+          <table cellspacing="0" cellpadding="0">
+            <tbody>
+            <% for(var i = 0; i < ticketOrders.length; i++){ %>
+            <tr height="20">
+              <td width="240"><%=ticketOrders[i].passengerName%><span class="id_no">（<%=ticketOrders[i].passengerIdNo%>）</span></td>
+              <td width="60"><%=ticketOrders[i].seatName%></td>
+              <td width="70"><%=ticketOrders[i].passengerType%></td>
+              <td width="80" data-passenger-detail="price"><%=ticketOrders[i].ticketPrice%></td>
+            </tr>
+            <% }%>
+            </tbody>
+          </table>
+      </div>
+      <div id="rand_auto">
+        <div class="autolayer">
+          <div class="layer_wrapper">
+            <img src="images/image002.gif">
+            <div class="autotip">
+              <span id="autotip">正在尝试自动识别验证码...</span><br />
+              <a id="manual_btn" href="javascript:void(0)">我要手动输入</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="rand_input">
+        <div class="randcodelayer" style="height:190px !important;">
+          <div class="">
+            <div class="errortip" id="errortip" style="left:246px;top:-23px;display:none;"></div>
+            <input id="inputcode" class="randcode" placeholder="请输入验证码" style="display:none;">
+            <p class="img-wrapper" style="position:absolute;left:50%;margin-left:-146px;width:293px;height:190px;">
+              <img src="" class="randcodeimg" id="randcode" width="293" height="190">
+            </p>
+            <a href="javascript:void(0)" id="refreshrand" class="change_randcode refreshrand" style="position:absolute;top:9px;right:135px;"></a>
+          </div>
+        </div>
+        <div class="btnlayer">
+          <a href="javascript:void(0);" class="btn_apply" data-confirm-btn="apply">立即提交</a>
+          <a href="javascript:void(0);" class="btn_cancel" data-confirm-btn="close">取消</a>
+        </div>
+      </div>
+    </div>
+    <div class="tickets_printing" data-confirm-area="submiting">
+      <p id="printing_txt">您的订单已经提交至12306网站<br/>正在努力为您出票</p>
+      <p id="waiting_txt" style="display:none;">您的订单已经提交至12306网站<br/>正在排队，预计需等待<span id="waittime"></span>分钟</p>
+      <div class="printing_animation"></div>
+    </div>
+    <div class="order_result_success" data-confirm-area="submited">
+      <div class="order_result">
+        <span class="icon"></span>
+        <p class="">您的订单已经提交成功，请您在<span class="retention-time">30</span>分钟内<br/>进行网上支付，完成购票</p>
+        <p class="order_success_tip">温馨提示：退票费按票价5%-20%计；若连续3次取消订单，则该账号当日将不能进行网上购票！</p>
+      </div>
+      <div class="btnlayer" style="">
+        <a href="javascript:void(0);" class="btn_apply" data-confirm-btn="submit">立即支付</a>
+        <a href="javascript:void(0);" class="btn_later" data-confirm-btn="close">稍后支付</a>
+      </div>
+    </div>
+    <div class="order_result_fail" data-confirm-area="submiterror">
+      <div class="order_result">
+        <span class="icon"></span>
+        <p class="order_result_fail_detail" style="">抢票的人实在太多了，您没有抢到<br/>请您重新刷票</p>
+      </div>
+      <div class="btnlayer" style="">
+        <a href="javascript:void(0);" class="btn_later" data-confirm-btn="close">确认</a>
+      </div>
+    </div>
+    <div class="order_result_fail" data-confirm-area="recerror">
+      <div class="order_result">
+        <span class="icon"></span>
+        <p class="order_result_fail_detail" style="">12306又不给力了，验证码获取失败<br/>请您重新下单</p>
+      </div>
+      <div class="btnlayer" style="">
+        <a href="javascript:void(0);" class="btn_later" data-confirm-btn="close">确认</a>
+      </div>
+    </div>
+  </div>
+  </script>
+
+  <!-- 通用提醒框 -->
+  <script type="text/template" id="window_template">
+  <div class="window">
+    <a class="btn_close" data-window-btn="close" href="javascript:void(0)"></a>
+    <h1 data-window-elem="title">提示</h1>
+    <div data-window-elem="content" class="content">
+
+    </div>
+    <div class="btns" data-window-elem="btn_wrapper">
+      <a href="javascript:void(0);" class="btn_apply" data-window-btn="apply">确定</a>
+      <a href="javascript:void(0);" class="btn_cancel" data-window-btn="cancel">取消</a>
+    </div>
+  </div>
+  </script>
+
+  <script type="text/arttemplate" id="sell_time_tpl">
+    {{@list}}
+      <li class="item">
+        <div class="station-name">{{%_val.name}}</div>
+        <div class="station-time">{{%_val.time}}</div>
+      </li>
+    {{/@list}}
+  </script>
+
+<script src="lib/jquery.js"></script>
+<script src="lib/t.min.js"></script>
+<script src="lib/base64.min.js"></script>
+<script src="lib/md5.js"></script>
+<script src="lib/jquery.qrcode.min.js"></script>
+<script>
+(function(){
+  $(document).on('show-nocrx-app-download-layer', function() {
+    bindLayerEvents();
+    $('.app-nocrx-download-layer').show();
+    $('input[name="app-dl-captcha"]').val('');
+    setCaptcha();
+    new Image().src = 'http://dd.browser.360.cn/static/a/387.5611.gif?' +  Math.random();
+  });
+
+  function bindLayerEvents(){
+    if (bindLayerEvents._binded) {
+      return;
+    }
+    bindLayerEvents._binded = true;
+
+    $('.app-dl-captcha-refresh').on('click', setCaptcha);
+
+    $('.app-nocrx-download-layer .close').on('click', function(e) {
+      $('.app-nocrx-download-layer').hide();
+      new Image().src = 'http://dd.browser.360.cn/static/a/387.6923.gif?' +  Math.random();
+    });
+
+    $('.app-dl-submit-btn').on('click', function(e) {
+      e.stopPropagation();
+      submit_layer();
+    });
+
+    $('.app-dl-captcha-refresh').on('click', setCaptcha);
+
+    $('.phone-alert-btn-ok, .phone-alert-close').on('click', function() {
+      $('.phone-alert').hide();
+    });
+  }
+
+  function setCaptcha() {
+    $('.app-dl-captcha-img').attr('src', 'http://api.lxqp.360.cn/order/verify/?type=5&' + Math.random());
+  }
+
+  function submit_layer() {
+    var phone = $('input[name="app-dl-phone-num"]:visible').val();
+    if (phone == '') {
+      $('.phone-alert p span').text('请输入手机号码！');
+      $('.phone-alert').attr('class', 'phone-alert').addClass('pa-error').show();
+      return;
+    }
+    if (!/^(1[0-9]{10})$/.test(phone)) {
+      $('.phone-alert p span').text('请输入正确的手机号码！');
+      $('.phone-alert').attr('class', 'phone-alert').addClass('pa-error').show();
+      return;
+    }
+    var captcha = $('input[name="app-dl-captcha"]:visible').val();
+    if (captcha == '') {
+      $('.phone-alert p span').text('请输入验证码！');
+      $('.phone-alert').attr('class', 'phone-alert').addClass('pa-error').show();
+      return;
+    }
+
+    $.ajax({
+      url: 'http://api.lxqp.360.cn/order/phone/',
+      data: {
+        phone: phone,
+        code: captcha,
+        type: 5
+      },
+      dataType: "jsonp",
+      jsonp: "callback",
+      success: function(ret) {
+        if (ret.code == 0) {
+          $('.phone-alert p span').text('短信已成功发送到您的手机！');
+          $('.phone-alert').attr('class', 'phone-alert').show();
+          new Image().src = 'http://dd.browser.360.cn/static/a/377.6471.gif?' + Math.random();
+        } else {
+          $('input[name="app-dl-captcha"]').val('');
+          setCaptcha();
+          $('.phone-alert p span').text(ret.msg.replace('!请稍后尝试', '，请稍后尝试！').replace('!', '！'));
+          $('.phone-alert').attr('class', 'phone-alert').addClass('pa-error').show();
+        }
+      }
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
